@@ -1,8 +1,9 @@
+import fetch from 'node-fetch';
+import axios from 'axios';
 
-// Axios also supports async/await syntax for performing a POST request:
-
-const axios = require('axios')
-
+const HOST = "http://185.65.246.123";
+// const HOST = "http://localhost";
+const PORT = "8080";
 
 let temperature = 19;
 const now = Date.now();
@@ -17,6 +18,7 @@ let time = now - 30 * day;
 
 
 
+
 const postTemperature = async () => {
   const intTemperature = Math.floor(temperature);
   try {
@@ -25,7 +27,7 @@ const postTemperature = async () => {
       datatime: time,
       value: intTemperature
     }
-    const res = await axios.post('http://185.65.246.123:8080/temperature', data)
+    const res = await axios.post(`${HOST}:${PORT}/temperature/`, data)
     // const res = await axios.post('http://localhost:8080/temperature', data)
     console.log(`Status: ${res.status}`)
   } catch (err) {
@@ -33,7 +35,16 @@ const postTemperature = async () => {
   }
 }
 
+async function del() {
+  console.log('starting fetch');
+  const response = await fetch(`${HOST}:${PORT}/temperature/delete`, {method: 'POST'});
+  console.log('fetched');
+  console.log(response);
+  console.log('deleted');
+}
+
 async function todo() {
+
   while (time < now) {
     time = time + min;
     const date = new Date(time);
@@ -47,5 +58,6 @@ async function todo() {
 }
 
 (async () => {
+  await del();
   todo();
 })();
